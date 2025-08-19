@@ -1,70 +1,146 @@
-# Getting Started with Create React App
+# Fashion Chatbot Backend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A Flask-based backend for a fashion chatbot with MongoDB integration and multi-chat functionality.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **AI-Powered Chat**: Integration with Google Gemini AI for intelligent fashion recommendations
+- **Multi-Chat Support**: Users can create, manage, and switch between multiple chat sessions
+- **MongoDB Integration**: Persistent storage for user sessions and chat history
+- **Product Catalog**: CSV-based product database with real-time pricing
+- **Image Analysis**: Vision AI capabilities for analyzing fashion images
+- **Cost Tracking**: Token usage and cost calculation for AI interactions
 
-### `npm start`
+## Prerequisites
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Python 3.8+
+- MongoDB (local or cloud instance)
+- Google Gemini API key
+- Exchange Rate API key
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Installation
 
-### `npm test`
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd Fashion_Chatbot
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. **Install Python dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### `npm run build`
+3. **Set up MongoDB**
+   - Install MongoDB locally or use MongoDB Atlas
+   - Create a database named `fashion_bot`
+   - Ensure MongoDB is running on `mongodb://localhost:27017/`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. **Configure environment variables**
+   - Copy `config.json` and update with your API keys
+   - Or set environment variables:
+     ```bash
+     export GOOGLE_API_KEY="your_gemini_api_key"
+     export EXCHANGE_RATE_API_KEY="your_exchange_rate_api_key"
+     export MONGODB_URI="mongodb://localhost:27017/"
+     ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Configuration
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Update `config.json` with your API keys:
 
-### `npm run eject`
+```json
+{
+  "EXCHANGE_RATE_API_KEY": "your_exchange_rate_api_key",
+  "GOOGLE_API_KEY": "your_gemini_api_key",
+  "MONGODB_URI": "mongodb://localhost:27017/",
+  "MONGODB_DATABASE": "fashion_bot"
+}
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Usage
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. **Start the backend server**
+   ```bash
+   python FinetunnedBackendCode.py
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+2. **Server will run on** `http://localhost:5000`
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## API Endpoints
 
-## Learn More
+### Chat Endpoints
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- `POST /api/chat` - Send a message and get AI response
+- `POST /api/history` - Get user chat history
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Multi-Chat Endpoints
 
-### Code Splitting
+- `POST /api/chats` - Create a new chat session
+- `GET /api/chats/<user_id>` - Get all chats for a user
+- `GET /api/chats/<chat_id>/messages` - Get messages for a specific chat
+- `PUT /api/chats/<chat_id>/rename` - Rename a chat session
+- `DELETE /api/chats/<chat_id>` - Delete a chat session
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Product Endpoints
 
-### Analyzing the Bundle Size
+- `GET /api/product-details/<product_id>` - Get product details
+- `POST /api/product-analysis` - Analyze a product with AI
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Multi-Chat Features
 
-### Making a Progressive Web App
+The backend now supports multiple chat sessions per user:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- **Chat Management**: Create, rename, and delete chat sessions
+- **Session Isolation**: Each chat maintains its own conversation history
+- **User Identification**: Unique user IDs for session management
+- **Persistent Storage**: All chat data stored in MongoDB
 
-### Advanced Configuration
+## Database Schema
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### User Sessions Collection (`user_sessions`)
+```json
+{
+  "_id": "ObjectId",
+  "user_id": "string",
+  "history": [],
+  "total_cost_usd": 0.0,
+  "total_cost_pkr": 0.0,
+  "total_input_tokens": 0,
+  "total_output_tokens": 0,
+  "total_image_displays": 0,
+  "created_at": "datetime",
+  "last_updated": "datetime"
+}
+```
 
-### Deployment
+### User Chats Collection (`user_chats`)
+```json
+{
+  "_id": "ObjectId",
+  "user_id": "string",
+  "chat_name": "string",
+  "created_at": "datetime",
+  "last_updated": "datetime",
+  "messages": []
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Frontend Integration
 
-### `npm run build` fails to minify
+The backend is designed to work with the existing React frontend. Update your frontend to:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Generate unique user IDs for each session
+2. Use the new multi-chat API endpoints
+3. Handle chat session management
+4. Display chat history and allow switching between chats
+
+## Troubleshooting
+
+- **MongoDB Connection**: Ensure MongoDB is running and accessible
+- **API Keys**: Verify your Google Gemini and Exchange Rate API keys are valid
+- **Port Conflicts**: Change the port in `FinetunnedBackendCode.py` if 5000 is occupied
+
+## License
+
+This project is licensed under the MIT License.

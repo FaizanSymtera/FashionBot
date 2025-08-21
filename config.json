@@ -1,6 +1,7 @@
 {
-  "EXCHANGE_RATE_API_KEY": "64bb8b615c2d81a87e0d9547",
-  "GOOGLE_API_KEY": "AIzaSyBpkiShlZSMnrY2wf69QG_r-MrNeFCLJos",
+  "EXCHANGE_RATE_API_KEY": "ExchangeKey",
+  "GOOGLE_API_KEY": "APIKey",
   "MONGODB_URI": "mongodb://localhost:27017/",
   "MONGODB_DATABASE": "fashion_bot"
+
 }
